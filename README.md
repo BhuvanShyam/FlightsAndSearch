@@ -39,4 +39,5 @@ If you're setting up test or prod environment, make sure you also replace the ho
 
 To run the server execute
 
-npm run dev
+      npm run dev
+  
