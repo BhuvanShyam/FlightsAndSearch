@@ -1,3 +1,6 @@
+// In services/index.js
+const CityService = require('./city-service'); // Make sure this path is correct
+
 module.exports = {
-    cityService:require('./city-service')
-}
+  CityService // Correctly exported as a property
+};
