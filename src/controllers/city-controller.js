@@ -1,26 +1,34 @@
-// controllers/city-controller.js
-
-const CityService = require('../services/city-service'); // Adjust the path as necessary
+const CityService = require("../services/city-service"); // Adjust the path as necessary
 
 // Instantiate the service
-const cityService = new CityService(); 
+const cityService = new CityService();
 
 // Create a new city
 const create = async (req, res) => {
   try {
-    const city = await cityService.createCity(req.body); // Use await for async methods
+    // Validate input data
+    if (!req.body.name) {
+      return res.status(400).json({
+        data: null,
+        success: false,
+        message: "City name is required",
+        err: {},
+      });
+    }
+
+    const city = await cityService.createCity(req.body);
     return res.status(201).json({
       data: city,
-      success: true, 
-      message: "Successfully created city", 
+      success: true,
+      message: "Successfully created city",
       err: {},
     });
   } catch (error) {
-    console.log("Error creating city:", error);
+    console.error("Error creating city:", error);
     return res.status(500).json({
       data: null,
-      success: false, 
-      message: "Error creating city", 
+      success: false,
+      message: "Error creating city",
       err: error.message,
     });
   }
@@ -29,19 +37,39 @@ const create = async (req, res) => {
 // Delete a city by ID
 const destroy = async (req, res) => {
   try {
-    const city = await cityService.deleteCity(req.params.id); // Use await for async methods
+    const cityId = req.params.id;
+    
+    if (!cityId) {
+      return res.status(400).json({
+        data: null,
+        success: false,
+        message: "City ID is required",
+        err: {},
+      });
+    }
+
+    const success = await cityService.deleteCity(cityId);
+    if (!success) {
+      return res.status(404).json({
+        data: null,
+        success: false,
+        message: "City not found",
+        err: {},
+      });
+    }
+
     return res.status(200).json({
-      data: city,
-      success: true, 
-      message: "Successfully deleted city", 
-      err: {}
+      data: null,
+      success: true,
+      message: "Successfully deleted city",
+      err: {},
     });
   } catch (error) {
-    console.log("Error deleting city:", error);
+    console.error("Error deleting city:", error);
     return res.status(500).json({
       data: null,
-      success: false, 
-      message: "Error deleting city", 
+      success: false,
+      message: "Error deleting city",
       err: error.message,
     });
   }
@@ -50,19 +78,39 @@ const destroy = async (req, res) => {
 // Get a city by ID
 const get = async (req, res) => {
   try {
-    const city = await cityService.getCity(req.params.id); // Use await for async methods
+    const cityId = req.params.id;
+
+    if (!cityId) {
+      return res.status(400).json({
+        data: null,
+        success: false,
+        message: "City ID is required",
+        err: {},
+      });
+    }
+
+    const city = await cityService.getCity(cityId);
+    if (!city) {
+      return res.status(404).json({
+        data: null,
+        success: false,
+        message: "City not found",
+        err: {},
+      });
+    }
+
     return res.status(200).json({
       data: city,
-      success: true, 
-      message: "Successfully fetched city", 
-      err: {}
+      success: true,
+      message: "Successfully fetched city",
+      err: {},
     });
   } catch (error) {
-    console.log("Error fetching city:", error);
+    console.error("Error fetching city:", error);
     return res.status(500).json({
       data: null,
-      success: false, 
-      message: "Error fetching city", 
+      success: false,
+      message: "Error fetching city",
       err: error.message,
     });
   }
@@ -71,19 +119,60 @@ const get = async (req, res) => {
 // Update a city by ID
 const update = async (req, res) => {
   try {
-    const city = await cityService.updateCity(req.params.id, req.body); // Use await for async methods
+    const cityId = req.params.id;
+
+    if (!cityId) {
+      return res.status(400).json({
+        data: null,
+        success: false,
+        message: "City ID is required",
+        err: {},
+      });
+    }
+
+    if (!req.body.name) {
+      return res.status(400).json({
+        data: null,
+        success: false,
+        message: "City name is required for update",
+        err: {},
+      });
+    }
+
+    const result = await cityService.updateCity(cityId, req.body);
     return res.status(200).json({
-      data: city,
-      success: true, 
-      message: "Successfully updated city", 
-      err: {}
+      data: result,
+      success: true,
+      message: "Successfully updated city",
+      err: {},
     });
   } catch (error) {
-    console.log("Error updating city:", error);
+    console.error("Error updating city:", error);
     return res.status(500).json({
       data: null,
-      success: false, 
-      message: "Error updating city", 
+      success: false,
+      message: "Error updating city",
+      err: error.message,
+    });
+  }
+};
+
+// Get all cities
+const getAll = async (req, res) => {
+  try {
+    const cities = await cityService.getAllCities();
+    return res.status(200).json({
+      data: cities,
+      success: true,
+      message: "Successfully fetched all cities",
+      err: {},
+    });
+  } catch (error) {
+    console.error("Error fetching all cities:", error);
+    return res.status(500).json({
+      data: null,
+      success: false,
+      message: "Error fetching all cities",
       err: error.message,
     });
   }
@@ -94,5 +183,6 @@ module.exports = {
   create,
   destroy,
   get,
-  update
+  update,
+  getAll,
 };
