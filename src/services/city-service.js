@@ -1,6 +1,6 @@
 // services/city-service.js
 
-const CityRepository = require('../repository/city-repository'); // Adjust the path as necessary
+const CityRepository = require("../repository/city-repository"); // Adjust the path as necessary
 
 class CityService {
   constructor() {
@@ -19,7 +19,7 @@ class CityService {
 
   async deleteCity(cityId) {
     try {
-      const response = await this.cityRepository.deleteCity(cityId);
+      const response = await this.cityRepository.deleteCity({ cityid: cityId });
       return response;
     } catch (error) {
       console.error("Error in deleteCity:", error);
@@ -29,8 +29,11 @@ class CityService {
 
   async updateCity(cityId, data) {
     try {
-      const response = await this.cityRepository.updateCity(cityId, data);
-      return response;
+      const success = await this.cityRepository.updateCity({ cityid: cityId, data });
+      if (!success) {
+        throw new Error('City not found or no changes made');
+      }
+      return { success: true, message: 'City updated successfully' };
     } catch (error) {
       console.error("Error in updateCity:", error);
       throw error;

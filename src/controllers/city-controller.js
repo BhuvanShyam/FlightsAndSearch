@@ -1,11 +1,11 @@
-const { CityService } = require("../services/index");
-/**
- * POST
- * data - > req.body
- */
+// controllers/city-controller.js
 
-const cityService = new CityService(); // Correctly instantiate CityService
+const CityService = require('../services/city-service'); // Adjust the path as necessary
 
+// Instantiate the service
+const cityService = new CityService(); 
+
+// Create a new city
 const create = async (req, res) => {
   try {
     const city = await cityService.createCity(req.body); // Use await for async methods
@@ -16,17 +16,17 @@ const create = async (req, res) => {
       err: {},
     });
   } catch (error) {
-    console.log(error);
+    console.log("Error creating city:", error);
     return res.status(500).json({
       data: null,
       success: false, 
       message: "Error creating city", 
-      err: error,
+      err: error.message,
     });
   }
 };
 
-// DELETE = /city/:id
+// Delete a city by ID
 const destroy = async (req, res) => {
   try {
     const city = await cityService.deleteCity(req.params.id); // Use await for async methods
@@ -34,19 +34,20 @@ const destroy = async (req, res) => {
       data: city,
       success: true, 
       message: "Successfully deleted city", 
+      err: {}
     });
   } catch (error) {
-    console.log(error);
+    console.log("Error deleting city:", error);
     return res.status(500).json({
       data: null,
       success: false, 
       message: "Error deleting city", 
-      err: error,
+      err: error.message,
     });
   }
 };
 
-// GET = /city/:id
+// Get a city by ID
 const get = async (req, res) => {
   try {
     const city = await cityService.getCity(req.params.id); // Use await for async methods
@@ -54,19 +55,20 @@ const get = async (req, res) => {
       data: city,
       success: true, 
       message: "Successfully fetched city", 
+      err: {}
     });
   } catch (error) {
-    console.log(error);
+    console.log("Error fetching city:", error);
     return res.status(500).json({
       data: null,
       success: false, 
       message: "Error fetching city", 
-      err: error,
+      err: error.message,
     });
   }
 };
 
-// PATCH = /city/:id -> req.body
+// Update a city by ID
 const update = async (req, res) => {
   try {
     const city = await cityService.updateCity(req.params.id, req.body); // Use await for async methods
@@ -74,18 +76,20 @@ const update = async (req, res) => {
       data: city,
       success: true, 
       message: "Successfully updated city", 
+      err: {}
     });
   } catch (error) {
-    console.log(error);
+    console.log("Error updating city:", error);
     return res.status(500).json({
       data: null,
       success: false, 
       message: "Error updating city", 
-      err: error,
+      err: error.message,
     });
   }
 };
 
+// Export the controller functions
 module.exports = {
   create,
   destroy,
