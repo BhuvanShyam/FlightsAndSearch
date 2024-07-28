@@ -53,3 +53,11 @@ Navigate to the src folder and execute:
 ```bash
 npx sequelize init
 ```
+
+## Tables
+
+### City -> id,name,created_at,updated_at
+
+### Airport -> id,name,addres,city_id,created_at,updated_at
+
+    Realationship -> City has many airports and airport belongs to a city(1 to many relationship)
