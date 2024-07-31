@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class Airport extends Model {
     static associate(models) {
       // define association here
-      this.belongsTo(models.city, {
+      this.belongsTo(models.City, {
         foreignKey: "cityId",
         onDelete: "CASCADE",
       });

@@ -61,3 +61,4 @@ npx sequelize init
 ### Airport -> id,name,addres,city_id,created_at,updated_at
 
     Realationship -> City has many airports and airport belongs to a city(1 to many relationship)
+    npx sequelize seed:generate --name add-airports
