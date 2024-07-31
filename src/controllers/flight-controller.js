@@ -1,5 +1,9 @@
 const { FlightService } = require("../services/index");
-
+const {
+  ClientCodes,
+  SuccessCodes,
+  ServerCodes,
+} = require("../utils/error-codes");
 const flightService = new FlightService();
 
 const isValidDate = (dateString) => {
@@ -15,11 +19,11 @@ const create = async (req, res) => {
     arrivalAirportId,
     departureTime,
     arrivalTime,
-    price
+    price,
   } = req.body;
 
   if (!isValidDate(departureTime) || !isValidDate(arrivalTime)) {
-    return res.status(400).json({
+    return res.status(ClientCodes.BAD_REQUEST).json({
       data: null,
       success: false,
       message: "Invalid date-time strings provided",
@@ -42,7 +46,7 @@ const create = async (req, res) => {
   try {
     const flight = await flightService.createFlight(flightRequestData);
 
-    return res.status(201).json({
+    return res.status(SuccessCodes.CREATED).json({
       data: flight,
       message: "Flight created successfully",
       success: true,
@@ -50,7 +54,7 @@ const create = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating flight:", error);
-    return res.status(500).json({
+    return res.status(ServerCodes.INTERNAL_SERVER_ERROR).json({
       data: null,
       success: false,
       message: "Error creating flight",
@@ -69,7 +73,7 @@ const getAll = async (req, res) => {
 
     const response = await flightService.getAllFlightData(filter);
 
-    return res.status(200).json({
+    return res.status(SuccessCodes.OK).json({
       data: response,
       message: "Flight data retrieved successfully",
       success: true,
@@ -77,7 +81,7 @@ const getAll = async (req, res) => {
     });
   } catch (error) {
     console.error("Error getting all flights:", error);
-    return res.status(500).json({
+    return res.status(ServerCodes.INTERNAL_SERVER_ERROR).json({
       data: null,
       success: false,
       message: "Error getting flights",
