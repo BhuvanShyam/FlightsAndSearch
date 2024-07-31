@@ -1,24 +1,34 @@
 const validateCreateFlight = (req, res, next) => {
+  const {
+    flightNumber,
+    airplaneId,
+    departureAirportId,
+    arrivalAirportId,
+    departureTime,
+    arrivalTime,
+    price,
+  } = req.body;
+
   if (
-    !req.body.flightNumber ||
-    !req.body.airplneId ||
-    !req.body.departureAirportId ||
-    !req.body.arrivalAirportId ||
-    !req.body.arrivaltime ||
-    !req.body.departureTime ||
-    !req.body.price
+    !flightNumber ||
+    !airplaneId ||
+    !departureAirportId ||
+    !arrivalAirportId ||
+    !departureTime ||
+    !arrivalTime ||
+    !price
   ) {
-    // if any body param is missing come inside the middleware
     return res.status(400).json({
-      message: "invalid request body for create flight",
+      message: "Invalid request body for creating flight",
       data: {},
       success: false,
-      err: "Missing mandataory properties",
+      err: "Missing mandatory properties",
     });
   }
 
   next();
 };
+
 module.exports = {
-    validateCreateFlight
-}
+  validateCreateFlight,
+};

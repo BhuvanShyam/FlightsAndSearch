@@ -2,17 +2,44 @@ const { FlightService } = require("../services/index");
 
 const flightService = new FlightService();
 
+const isValidDate = (dateString) => {
+  const date = new Date(dateString);
+  return date instanceof Date && !isNaN(date);
+};
+
 const create = async (req, res) => {
+  const {
+    flightNumber,
+    airplaneId,
+    departureAirportId,
+    arrivalAirportId,
+    departureTime,
+    arrivalTime,
+    price
+  } = req.body;
+
+  if (!isValidDate(departureTime) || !isValidDate(arrivalTime)) {
+    return res.status(400).json({
+      data: null,
+      success: false,
+      message: "Invalid date-time strings provided",
+      err: "Unable to createFlight: Invalid date-time strings provided.",
+    });
+  }
+
+  const flightRequestData = {
+    flightNumber,
+    airplaneId,
+    departureAirportId,
+    arrivalAirportId,
+    departureTime: new Date(departureTime),
+    arrivalTime: new Date(arrivalTime), // Corrected typo here
+    price: parseFloat(price),
+  };
+
+  console.log("Flight Request Data:", flightRequestData); // Log the flight request data
+
   try {
-    const flightRequestData = {
-      flightNumber: req.body.flightNumber,
-      airplaneId: req.body.airplaneId,
-      departureAirportId: req.body.departureAirportId,
-      arrivalAirportId: req.body.arrivalAirportId,
-      departureTime: req.body.departureTime,
-      arrivalTime: req.body.arrivalTime,
-      price: req.body.price,
-    };
     const flight = await flightService.createFlight(flightRequestData);
 
     return res.status(201).json({
@@ -34,7 +61,6 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    // Extract filter parameters from query string
     const filter = {
       minPrice: parseFloat(req.query.minprice),
       arrivalAirportId: req.query.arrivalAirportId,
@@ -50,11 +76,11 @@ const getAll = async (req, res) => {
       err: {},
     });
   } catch (error) {
-    console.error("Error getting all flights: in controller", error);
+    console.error("Error getting all flights:", error);
     return res.status(500).json({
       data: null,
       success: false,
-      message: "Error getting flights in controller",
+      message: "Error getting flights",
       err: error.message,
     });
   }
