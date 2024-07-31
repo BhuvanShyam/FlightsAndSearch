@@ -62,3 +62,15 @@ npx sequelize init
 
     Realationship -> City has many airports and airport belongs to a city(1 to many relationship)
     npx sequelize seed:generate --name add-airports
+
+
+    Data Flow Example:
+
+```bash
+Client Request: A client sends a request to the /users endpoint.
+Route Handling: The route /users maps the request to the getAllUsers controller action.
+Controller Processing: The getAllUsers controller action calls the getAllUsers service method.
+Service Logic: The getAllUsers service method calls the findAll repository method.
+Repository Interaction: The findAll repository method fetches data from the database.
+Response: The data is passed back through the service and controller layers, and finally sent as a response to the client.
+```
