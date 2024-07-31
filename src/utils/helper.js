@@ -9,8 +9,10 @@ function compareTime(timeString1, timeString2) {
     }
 
     // Compare the dates
-    return dateTime1.getTime() < dateTime2.getTime();
+    return dateTime1.getTime() > dateTime2.getTime();
 }
+
+
 
 module.exports = {
     compareTime

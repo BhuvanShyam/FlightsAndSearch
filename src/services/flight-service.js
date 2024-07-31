@@ -1,8 +1,5 @@
-const {
-  FlightRepository,
-  AirplaneRepository,
-} = require("../repository/index");
-const { compareTime } = require('../utils/helper');
+const { FlightRepository, AirplaneRepository } = require("../repository/index");
+const { compareTime } = require("../utils/helper");
 
 class FlightService {
   constructor() {
@@ -12,23 +9,21 @@ class FlightService {
 
   async createFlight(data) {
     try {
-      // Validate required fields
       if (!data.airplaneId) {
-        throw new Error('Airplane ID is required to create a flight');
+        throw new Error("Airplane ID is required to create a flight");
       }
 
-      // Validate time comparison
+      // Ensure correct comparison for departure and arrival times
       if (compareTime(data.departureTime, data.arrivalTime)) {
-        throw new Error('Departure time must be before arrival time');
+        throw new Error("Departure time must be before arrival time");
       }
 
-      // Check if airplane exists
       const airplane = await this.airplaneRepository.getAirplane(data.airplaneId);
       if (!airplane) {
-        throw new Error(`Airplane with ID ${data.airplaneId} not found`);
+        throw new Error(`Airplane with id ${data.airplaneId} not found`);
       }
 
-      // Create flight
+      // Create flight with additional totalSeats from airplane capacity
       const flight = await this.flightRepository.createFlight({
         ...data,
         totalSeats: airplane.capacity,
@@ -37,15 +32,16 @@ class FlightService {
       return flight;
     } catch (error) {
       console.error("Error in createFlight:", error);
-      throw new Error(`Unable to create flight: ${error.message}`);
+      throw new Error(`Unable to createFlight: ${error.message}`);
     }
   }
 
-  async getFlightData() {
+  async getAllFlightData(data) {
     try {
-      // TODO: Implement getFlightData functionality
+      const flights = await this.flightRepository.getAllFlights(data);
+      return flights;
     } catch (error) {
-      console.error("Error in getFlightData:", error);
+      console.error("Error in getAllFlightData:", error);
       throw new Error(`Unable to get flight data: ${error.message}`);
     }
   }
