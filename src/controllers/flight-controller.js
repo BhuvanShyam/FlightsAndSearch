@@ -4,47 +4,16 @@ const flightService = new FlightService();
 
 const create = async (req, res) => {
   try {
-    // Extract parameters from query string
-    const {
-      flightNumber,
-      airplaneId,
-      departureAirportId,
-      arrivalAirportId,
-      arrivaltime,
-      departureTime,
-      price,
-    } = req.query;
-
-    // Check if all required parameters are provided
-    if (
-      !flightNumber ||
-      !airplaneId ||
-      !departureAirportId ||
-      !arrivalAirportId ||
-      !arrivaltime ||
-      !departureTime ||
-      !price
-    ) {
-      return res.status(400).json({
-        data: null,
-        success: false,
-        message: "Missing required parameters",
-        err: "All parameters are required to create a flight",
-      });
-    }
-
-    // Create flight object
-    const flightData = {
-      flightNumber,
-      airplaneId,
-      departureAirportId,
-      arrivalAirportId,
-      arrivaltime: new Date(arrivaltime),
-      departureTime: new Date(departureTime),
-      price: parseInt(price, 10),
+    const flightRequestData = {
+      flightNumber: req.body.flightNumber,
+      airplaneId: req.body.airplaneId,
+      departureAirportId: req.body.departureAirportId,
+      arrivalAirportId: req.body.arrivalAirportId,
+      departureTime: req.body.departureTime,
+      arrivalTime: req.body.arrivalTime,
+      price: req.body.price,
     };
-
-    const flight = await flightService.createFlight(flightData);
+    const flight = await flightService.createFlight(flightRequestData);
 
     return res.status(201).json({
       data: flight,
