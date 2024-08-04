@@ -31,7 +31,7 @@ class FlightRepository {
     //     [Op.lte]: parseFloat(data.maxPrice),
     //   };
     // }
-    
+
     let priceFilter = [];
     if (data.minPrice) {
       priceFilter.push({ price: { [Op.gte]: parseFloat(data.minPrice) } });
@@ -76,6 +76,21 @@ class FlightRepository {
     } catch (error) {
       console.error("Error fetching flights:(repository)", error);
       throw new Error(`Unable to fetch Flights: ${error.message}`);
+    }
+  }
+
+  async updateFlights(flightId, data) {
+    try {
+      const [affectedRows] = await Flights.update(data, {
+        where: {
+          id: flightId,
+        },
+      });
+      console.log(`Number of affected rows: ${affectedRows}`);
+      return affectedRows > 0; // Return true if rows were affected
+    } catch (error) {
+      console.error("Error updating flight:(repository)", error);
+      throw new Error(`Unable to update Flight: ${error.message}`);
     }
   }
 }

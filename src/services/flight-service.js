@@ -18,7 +18,9 @@ class FlightService {
         throw new Error("Departure time must be before arrival time");
       }
 
-      const airplane = await this.airplaneRepository.getAirplane(data.airplaneId);
+      const airplane = await this.airplaneRepository.getAirplane(
+        data.airplaneId
+      );
       if (!airplane) {
         throw new Error(`Airplane with id ${data.airplaneId} not found`);
       }
@@ -43,6 +45,29 @@ class FlightService {
     } catch (error) {
       console.error("Error in getAllFlightData:", error);
       throw new Error(`Unable to get flight data: ${error.message}`);
+    }
+  }
+
+  async getFlight(flightId) {
+    try {
+      const flight = await this.flightRepository.getFlight(flightId);
+      return flight;
+    } catch (error) {
+      console.error("Error in getFlight:", error);
+      throw new Error(`Unable to get flight: ${error.message}`);
+    }
+  }
+
+  async updateFlight(flightId, data) {
+    try {
+      const response = await this.flightRepository.updateFlights(
+        flightId,
+        data
+      );
+      return response;
+    } catch (error) {
+      console.error("Error in updateFlight:", error);
+      throw new Error(`Unable to update flight: ${error.message}`);
     }
   }
 }

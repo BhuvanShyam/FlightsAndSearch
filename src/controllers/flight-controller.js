@@ -2,8 +2,7 @@ const { FlightService } = require("../services/index");
 const {
   ClientCodes,
   SuccessCodes,
-  ServerCodes,
-} = require("../utils/error-codes");
+  ServerCodes,} = require("../utils/error-codes");
 const flightService = new FlightService();
 
 const isValidDate = (dateString) => {
@@ -90,7 +89,50 @@ const getAll = async (req, res) => {
   }
 };
 
+const get = async (req, res) => {
+  try {
+    const response = await flightService.getFlight(req.params.id);
+
+    return res.status(SuccessCodes.OK).json({
+      data: response,
+      message: "Flight data retrieved successfully",
+      success: true,
+      err: {},
+    });
+  } catch (error) {
+    console.error("Error getting  flight:", error);
+    return res.status(ServerCodes.INTERNAL_SERVER_ERROR).json({
+      data: null,
+      success: false,
+      message: "Error getting flight detail",
+      err: error.message,
+    });
+  }
+};
+
+const update = async (req, res) => {
+  try {
+    const response = await flightService.updateFlight(req.params.id, req.body);
+    return res.status(SuccessCodes.OK).json({
+      data: response,
+      message: "Flight data upadated successfully",
+      success: true,
+      err: {},
+    });
+  } catch (error) {
+    console.error("Error getting  flight:", error);
+    return res.status(ServerCodes.INTERNAL_SERVER_ERROR).json({
+      data: null,
+      success: false,
+      message: "Not able to update flight",
+      err: error.message,
+    });
+  }
+};
+
 module.exports = {
   create,
   getAll,
+  get,
+  update,
 };
